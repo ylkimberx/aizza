@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flower Grade Garden</title>
+
+<style>
+body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#e6ffe6,#f0fff0,#e0ffe0);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    background-size:cover;
+    background-position:center;
+    background-image: url(flowerr.jpeg);
+}
+
+.container{
+    width:95%;
+    max-width:520px;
+    border-radius:25px;
+    padding:35px;
+    background:rgba(255,255,255,0.35);
+    backdrop-filter:blur(12px);
+    border:2px solid rgba(255,255,255,0.5);
+    box-shadow:0 15px 40px rgba(0,0,0,0.25);
+}
+
+/* HEADER */
+header{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+header h1{
+    color:#2e7d32;
+    font-size:30px;
+}
+
+header p{
+    color:#4caf50;
+    font-size:14px;
+}
+
+/* INPUT */
+.input-box{
+    margin-bottom:20px;
+}
+
+.input-box input{
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    border:2px solid #c8e6c9;
+}
+
+.subject{
+    display:flex;
+    gap:10px;
+    margin-bottom:10px;
+}
+
+.subject input{
+    flex:1;
+    padding:10px;
+    border-radius:10px;
+    border:2px solid #c8e6c9;
+}
+
+/* BUTTON */
+button{
+    width:100%;
+    padding:14px;
+    margin-top:15px;
+    border:none;
+    border-radius:18px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    background:linear-gradient(135deg,#43a047,#81c784);
+    color:white;
+}
+
+/* RESULT */
+.result{
+    margin-top:20px;
+    background:rgba(232,245,233,0.8);
+    padding:15px;
+    border-radius:15px;
+    text-align:center;
+    font-weight:bold;
+    color:#2e7d32;
+}
+
+/* TITLE NG STUDENT RECORDS */
+.records-title{
+    text-align:center;
+    font-size:22px;
+    margin-top:25px;
+    margin-bottom:10px;
+    color:#2e7d32;
+    font-weight:bold;
+}
+
+/* TABLE */
+.records{
+    margin-top:10px;
+}
+
+.table-wrapper{
+    width:100%;
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:700px;
+    border-collapse:collapse;
+    background:rgba(255,255,255,0.85);
+    border-radius:12px;
+    overflow:hidden;
+}
+
+th{
+    background:#66bb6a;
+    color:white;
+    padding:8px;
+    font-size:13px;
+}
+
+td{
+    padding:8px;
+    font-size:13px;
+    text-align:center;
+    border-bottom:1px solid #ddd;
+}
+
+tr:hover{
+    background:#f1f8e9;
+}
+
+th, td{
+    white-space:nowrap;
+}
+
+/* FOOTER */
+footer{
+    margin-top:15px;
+    text-align:center;
+    font-size:14px;
+    color:#2e7d32;
+}
+
+@media(max-width:500px){
+    .subject{
+        flex-direction:column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+<h1>🌼 Flower Grade Garden</h1>
+<p>Calculate your grades beautifully</p>
+</header>
+
+<div class="input-box">
+<input type="text" id="studentName" placeholder="Student Name">
+</div>
+
+<!-- SUBJECT INPUTS -->
+<div class="subject">
+<input type="text" placeholder="Quiz(20%)">
+<input type="number" class="subject-grade">
+</div>
+<div class="subject">
+<input type="text" placeholder="Lab(30%)">
+<input type="number" class="subject-grade">
+</div>
+<div class="subject">
+<input type="text" placeholder="Assignment(10%)">
+<input type="number" class="subject-grade">
+</div>
+<div class="subject">
+<input type="text" placeholder="Attendance(10%)">
+<input type="number" class="subject-grade">
+</div>
+<div class="subject">
+<input type="text" placeholder="Major Exam(30%)">
+<input type="number" class="subject-grade">
+</div>
+
+<button onclick="compute()">🌸 Calculate Average</button>
+
+<div class="result" id="result"></div>
+
+<!-- 🔥 NEW: STUDENT RECORDS TITLE -->
+<div class="records-title">📋 Student Records</div>
+
+<!-- TABLE -->
+<div class="records">
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>👤 Name</th>
+<th>Quiz(20%)</th>
+<th>Laboratory(30%)</th>
+<th>Assignment(10%)</th>
+<th>Attendance(10%)</th>
+<th>Major Exam(30%)</th>
+<th>🌸 Grade</th>
+<th>📊 Status</th>
+<th>🗑️</th>
+</tr>
+</thead>
+<tbody id="records"></tbody>
+</table>
+</div>
+</div>
+
+<footer>
+🌼 🌷 🌹 🌻  
+<div class="name">Aizza Panizales BSIT 3A</div>
+</footer>
+
+</div>
+
+<script>
+const recordsContainer = document.getElementById("records");
+
+/* LIMIT 3 DIGITS */
+document.querySelectorAll('.subject-grade').forEach(input=>{
+    input.addEventListener('input', ()=>{
+        if(input.value.length > 3) input.value = input.value.slice(0,3);
+
+        let val = parseInt(input.value);
+        if(val > 999) input.value = 999;
+        if(val < 0 || isNaN(val)) input.value = '';
+    });
+});
+
+/* COMPUTE */
+function compute(){
+    const name = document.getElementById("studentName").value || "Unnamed";
+    const inputs = document.querySelectorAll('.subject-grade');
+
+    let grades=[];
+    let total=0;
+
+    inputs.forEach(input=>{
+        let val=parseFloat(input.value)||0;
+        grades.push(val);
+        total+=val;
+    });
+
+    let avg=(total/grades.length).toFixed(2);
+    let status=avg>=75?"Passed 🎉":"Failed ❌";
+
+    document.getElementById("result").innerHTML=
+        `🌸 ${name}'s Average: <b>${avg}</b>`;
+
+    const row=document.createElement("tr");
+
+    row.innerHTML=`
+        <td>${name}</td>
+        <td>${grades[0]}</td>
+        <td>${grades[1]}</td>
+        <td>${grades[2]}</td>
+        <td>${grades[3]}</td>
+        <td>${grades[4]}</td>
+        <td><b>${avg}</b></td>
+        <td>${status}</td>
+        <td><button onclick="this.parentElement.parentElement.remove()">X</button></td>
+    `;
+
+    recordsContainer.prepend(row);
+
+    if(recordsContainer.children.length>5){
+        recordsContainer.removeChild(recordsContainer.lastChild);
+    }
+
+    document.getElementById("studentName").value="";
+    inputs.forEach(i=>i.value="");
+}
+</script>
+
+</body>
+</html>
